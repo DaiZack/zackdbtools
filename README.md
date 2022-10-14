@@ -58,7 +58,25 @@ export DB_CREDENTIALS_PATH=$HOME/.credentials/dbcredentials_example.json
 export SERVICE_ACCOUNT_JSON_PATH=$HOME/.credentials/service_account.json
 ```
 
+if you run your app as a systemd service:
+```
+vi /etc/systemd/system/YOURSERVICENAME.service
+```
+
+add environment variable 
+```
+[Service]
+Environment=DB_CREDENTIALS_PATH=$HOME/.credentials/dbcredentials.json
+Environment=SERVICE_ACCOUNT_JSON_PATH=$HOME/.credentials/tymbrel-service-account.json
+```
+
 in windows, use the search bar to search "environment variable" add the two variables to user/system variables
+
+
+if you want to build app in docker 
+```
+docker run -e DB_CREDENTIALS_PATH=dbcredentials.json -e SERVICE_ACCOUNT_JSON_PATH=tymbrel-service-account.json dockerimagename
+```
 
 download the repository, and 
 
