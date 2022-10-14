@@ -20,7 +20,7 @@ setuptools.setup(
 
     long_description_content_type="text/markdown",
 
-    url="<https://github.com/DaiZack/zackdbtools>",
+    url="https://github.com/DaiZack/zackdbtools",
 
     packages=setuptools.find_packages(),
     include_package_data=True,
