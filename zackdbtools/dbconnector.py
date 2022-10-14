@@ -6,7 +6,7 @@ from sqlalchemy.dialects.mysql import SMALLINT, INTEGER, BIGINT, FLOAT, DOUBLE, 
 import os
 
 
-DB_CREDENTIALS_PATH = os.path.expandvars(os.environ.get('DB_CREDENTIALS_PATH'))
+DB_CREDENTIALS_PATH = os.path.expandvars(os.environ.get('DB_CREDENTIALS_PATH','$HOME/.credentials/dbcredentials.json'))
 
 
 def db_engine(cred : 'devmysql,tymbrel,dwh,dwhwrite,memory,filedb', db=None):

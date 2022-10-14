@@ -8,7 +8,7 @@ setuptools.setup(
 
     name="zackdbtools", # Replace with your username
 
-    version="0.1.1",
+    version="0.1.12",
 
     author="Zack Dai",
 

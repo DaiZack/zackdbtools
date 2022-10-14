@@ -4,7 +4,7 @@ from googleapiclient.discovery import build
 import importlib.resources as importlib_resources
 import os
 
-SERVICE_ACCOUNT_JSON_PATH = os.path.expandvars(os.environ.get("SERVICE_ACCOUNT_JSON_PATH", None))
+SERVICE_ACCOUNT_JSON_PATH = os.path.expandvars(os.environ.get("SERVICE_ACCOUNT_JSON_PATH", "$HOME/.credentials/ga-service-account.json"))
 
 #Get one report page
 def get_report(service, query):

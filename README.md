@@ -48,7 +48,7 @@ DB_CREDENTIALS_PATH=$HOME/.credentials/dbcredentials_example.json
 SERVICE_ACCOUNT_JSON_PATH=$HOME/.credentials/service_account.json
 ```
 
-in linux/mac you can 
+in linux/mac you can (NOTE: in vscode jupyter, it doesn't read the .bashrc, you can either add a .env or use the same file path below)
 ```
 vi $HOME/.bashrc
 ```
@@ -67,7 +67,11 @@ add environment variable
 ```
 [Service]
 Environment=DB_CREDENTIALS_PATH=$HOME/.credentials/dbcredentials.json
-Environment=SERVICE_ACCOUNT_JSON_PATH=$HOME/.credentials/tymbrel-service-account.json
+Environment=SERVICE_ACCOUNT_JSON_PATH=$HOME/.credentials/ga-service-account.json
+```
+then reload daemon
+```
+systemctl daemon-reload
 ```
 
 in windows, use the search bar to search "environment variable" add the two variables to user/system variables
@@ -75,8 +79,10 @@ in windows, use the search bar to search "environment variable" add the two vari
 
 if you want to build app in docker 
 ```
-docker run -e DB_CREDENTIALS_PATH=dbcredentials.json -e SERVICE_ACCOUNT_JSON_PATH=tymbrel-service-account.json dockerimagename
+docker run -e DB_CREDENTIALS_PATH=dbcredentials.json -e SERVICE_ACCOUNT_JSON_PATH=ga-service-account.json dockerimagename
 ```
+
+
 
 download the repository, and 
 

@@ -4,7 +4,7 @@ from googleapiclient.discovery import build
 import importlib.resources as importlib_resources
 import os
 
-SERVICE_ACCOUNT_JSON_PATH = os.path.expandvars(os.environ.get("SERVICE_ACCOUNT_JSON_PATH", None))
+SERVICE_ACCOUNT_JSON_PATH = os.path.expandvars(os.environ.get("SERVICE_ACCOUNT_JSON_PATH", "$HOME/.credentials/ga-service-account.json"))
 
 def readgooglesheets(SAMPLE_SPREADSHEET_ID,SAMPLE_RANGE_NAME, service_account_json=None,dedupCol=None, skiprows = 0,valueRenderOption='UNFORMATTED_VALUE'):
   SCOPES = ['https://www.googleapis.com/auth/spreadsheets.readonly']
