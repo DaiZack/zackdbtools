@@ -1,7 +1,6 @@
 import pandas as pd
 from google.oauth2 import service_account
 from googleapiclient.discovery import build
-import importlib.resources as importlib_resources
 import os
 
 SERVICE_ACCOUNT_JSON_PATH = os.path.expandvars(os.environ.get("SERVICE_ACCOUNT_JSON_PATH", "$HOME/.credentials/ga-service-account.json"))
@@ -118,6 +117,6 @@ def gareports(view_id, metrics, dimensions, service_account_json=None, filters=N
 if __name__ == '__main__':
     view_id = '264478000'
     metrics = ['ga:users','ga:newUsers','ga:pageViews','ga:sessions']
-    dimensions = ['ga:month', 'ga:year']
+    dimensions = ['ga:date', 'ga:year','ga:pagePath']
     start_date = '2018-01-01'
     df = gareports(view_id, metrics, dimensions, start_date=start_date)
