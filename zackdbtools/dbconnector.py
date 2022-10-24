@@ -73,8 +73,8 @@ def getsqltype(df : pd.DataFrame) -> dict:
             continue
         # if str(coltype).startswith('string') or str(coltype).startswith('object'):
         maxlen = df[dfcol].astype('str').str.len().max()
-        maxlen = 50 if maxlen < 50 else maxlen +100
-        if maxlen <= 65535:
+        maxlen = 50 if maxlen < 50 else (((maxlen +100)// 250) + 1) * 250
+        if maxlen <= 1000:
             sqldtypes[dfcol] = NVARCHAR(maxlen)
         else:
             sqldtypes[dfcol] = TEXT
