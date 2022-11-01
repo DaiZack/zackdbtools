@@ -1,6 +1,24 @@
 # zackdbtool
 a python package to connect db and data sources like google sheets
 
+## df2sql
+Detect data types in the pandas dataframe, auto pick the minium column types, auto add autoincrement id as primary key to the table(optional)
+
+usage:
+
+```
+from zackdbtools.dbconnector import db_engine, df2sql
+import pandas as pd
+engine = db_engine('yourdbserver', 'yourdbname') # dbserver is the name in your config file
+''' if you don't have configure file:
+from sqlalchemy import create_engine
+engine = create_engine('your engine str')
+'''
+
+df = pd.read_sql('select * from yourtablename limit 10', engine)
+df2sql(df=df, tablename='newTesttable', engine=engine , replace=True, autoid=True)
+```
+
 ## Set up
 make a json file that contains the database credentials. 
 

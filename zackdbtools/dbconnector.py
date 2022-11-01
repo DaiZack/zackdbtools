@@ -1,9 +1,9 @@
 
 import json
-import importlib.resources as importlib_resources
 import pandas as pd
 from sqlalchemy.dialects.mysql import SMALLINT, INTEGER, BIGINT, FLOAT, DOUBLE, TEXT, NVARCHAR, DATETIME, BOOLEAN
 import os
+from sqlalchemy import inspect, Table, Column, MetaData, engine
 
 
 DB_CREDENTIALS_PATH = os.path.expandvars(os.environ.get('DB_CREDENTIALS_PATH','$HOME/.credentials/dbcredentials.json'))
@@ -79,3 +79,37 @@ def getsqltype(df : pd.DataFrame) -> dict:
         else:
             sqldtypes[dfcol] = TEXT
     return sqldtypes
+
+def df2sql( df : pd.DataFrame, tablename: str,engine: engine, replace=False, atuoid=True):
+    """
+    :param df: the dataframe you want to save
+    :type df: pd.DataFrame
+    :param tablename: the name of the table you want to create
+    :type tablename: str
+    :param engine: the engine object that you created in the previous section
+    :type engine: engine
+    :param replace: if the table already exists, drop it and create a new one, defaults to False
+    (optional)
+    :param atuoid: if True, the table will have an auto-incrementing id column, defaults to True
+    (optional)
+    """
+    dtypes = getsqltype(df)
+    if replace:
+        with engine.connect() as conn:
+            conn.execute(f'DROP TABLE IF EXISTS {tablename}')
+    inspector = inspect(engine)
+    if tablename in inspector.get_table_names():
+        df.to_sql(tablename, engine, if_exists='append', index=False, dtype=dtypes)
+        return False
+    else:
+        metadata = MetaData()
+        columns = []
+        for col in dtypes:
+            columns.append(Column(col, dtypes[col]))
+        if atuoid:
+            table = Table(tablename, metadata, Column('id', BIGINT(unsigned=True), primary_key=True, autoincrement=True), *columns)
+        else:
+            table = Table(tablename, metadata, *columns)
+        metadata.create_all(engine)
+        df.to_sql(tablename, engine, if_exists='append', index=False, dtype=dtypes)
+        return True
