@@ -93,6 +93,8 @@ def df2sql( df : pd.DataFrame, tablename: str,engine: engine, replace=False, atu
     :param atuoid: if True, the table will have an auto-incrementing id column, defaults to True
     (optional)
     """
+    if 'id' in df.columns and atuoid:
+        df = df.rename(columns={'id': '_id'})
     dtypes = getsqltype(df)
     if replace:
         with engine.connect() as conn:
