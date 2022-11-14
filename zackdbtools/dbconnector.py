@@ -1,7 +1,7 @@
 
 import json
 import pandas as pd
-from sqlalchemy.dialects.mysql import SMALLINT, INTEGER, BIGINT, FLOAT, DOUBLE, TEXT, NVARCHAR, DATETIME, BOOLEAN
+from sqlalchemy.dialects.mysql import SMALLINT, INTEGER, BIGINT, FLOAT, DOUBLE, TEXT, VARCHAR, DATETIME, BOOLEAN
 import os
 from sqlalchemy import inspect, Table, Column, MetaData, engine
 
@@ -75,7 +75,7 @@ def getsqltype(df : pd.DataFrame) -> dict:
         maxlen = df[dfcol].astype('str').str.len().max()
         maxlen = 50 if maxlen < 50 else (((maxlen +100)// 250) + 1) * 250
         if maxlen <= 1000:
-            sqldtypes[dfcol] = NVARCHAR(maxlen)
+            sqldtypes[dfcol] = VARCHAR(maxlen, collation='utf8mb4_0900_ai_ci', charset='utf8mb4')
         else:
             sqldtypes[dfcol] = TEXT
     return sqldtypes
@@ -115,3 +115,9 @@ def df2sql( df : pd.DataFrame, tablename: str,engine: engine, replace=False, atu
         metadata.create_all(engine)
         df.to_sql(tablename, engine, if_exists='append', index=False, dtype=dtypes)
         return True
+
+
+if __name__ == '__main__':
+    engine = db_engine('dwhwrite','dcdashboard')
+    df = pd.DataFrame({'a': ['names', 'words', 'texts'], 'b': [4, 5, 6]})
+    df2sql(df, 'testtable', engine, replace=False)
