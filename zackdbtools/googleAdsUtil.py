@@ -4,6 +4,7 @@ from datetime import datetime
 import pandas as pd
 import os
 
+# sample yaml file https://github.com/googleads/google-ads-python/blob/main/google-ads.yaml
 GOOGLE_ADS_YAML_PATH = os.path.expandvars(os.environ.get("GOOGLE_ADS_YAML_PATH", "$HOME/.credentials/google-ads.yml"))
 
 def map_locations_ids_to_resource_names(client, location_ids):
