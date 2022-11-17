@@ -3,6 +3,7 @@ from google.ads.googleads.errors import GoogleAdsException
 from datetime import datetime
 import pandas as pd
 import os
+import time
 
 # sample yaml file https://github.com/googleads/google-ads-python/blob/main/google-ads.yaml
 GOOGLE_ADS_YAML_PATH = os.path.expandvars(os.environ.get("GOOGLE_ADS_YAML_PATH", "$HOME/.credentials/google-ads.yml"))
@@ -24,7 +25,6 @@ def map_locations_ids_to_resource_names(client, location_ids):
 def keywordIdea(keyword_texts:list[str], startdate:datetime.date = None, enddate:datetime.date = None, location_ids : list = ["2124"],language_id = "1000",customer_id='5051885307', page_url=None, google_ads_yaml=GOOGLE_ADS_YAML_PATH):
     enddate = enddate or datetime.today()
     startdate = startdate or datetime.date(enddate.year, 1, 1)
-    print(f'date range: {startdate} to {enddate}')
     client = GoogleAdsClient.load_from_storage(google_ads_yaml)
     keyword_plan_idea_service = client.get_service("KeywordPlanIdeaService")
     monthemum = (None,
@@ -82,10 +82,17 @@ def keywordIdea(keyword_texts:list[str], startdate:datetime.date = None, enddate
     if keyword_texts and page_url:
         request.keyword_and_url_seed.url = page_url
         request.keyword_and_url_seed.keywords.extend(keyword_texts)
-
-    ideas = keyword_plan_idea_service.generate_keyword_ideas(
-        request=request
-    )
+    try:
+        ideas = keyword_plan_idea_service.generate_keyword_ideas(
+            request=request
+        )
+    except GoogleAdsException as ex:
+        print(ex)
+        print('retrying in two second...')
+        time.sleep(2)
+        ideas = keyword_plan_idea_service.generate_keyword_ideas(
+            request=request
+        )
     ideasdata = [{"keyword":i.text, "avg_monthly_searches":i.keyword_idea_metrics.avg_monthly_searches, "lot_bid_micros":i.keyword_idea_metrics.low_top_of_page_bid_micros,"high_bid_micros":i.keyword_idea_metrics.high_top_of_page_bid_micros} for i in ideas]
     df = pd.DataFrame(ideasdata)
     df['start_date'] = startdate.strftime("%Y-%m-%d")
