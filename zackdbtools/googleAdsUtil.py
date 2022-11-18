@@ -101,8 +101,30 @@ def keywordIdea(keyword_texts:list[str], startdate:datetime.date = None, enddate
     return df
 
 
+def getclientIDs(MCC = '5051885307'):
+    client = GoogleAdsClient.load_from_storage(GOOGLE_ADS_YAML_PATH)
+    ga_service = client.get_service("GoogleAdsService")
+    request = client.get_type("SearchGoogleAdsRequest")
+    customerlist_query = f'''
+    SELECT
+    customer_client.id
+    FROM customer_client 
+    where customer_client.status = 'ENABLED' and customer.id = {MCC}
+    '''
+    request.customer_id = MCC
+    request.query = customerlist_query
+    response = ga_service.search(request=request)
+    return [r.customer_client.id for r in response.results]
+
+
 if __name__ == "__main__":
     startdate = datetime(2022, 1, 1)
     enddate = datetime(2022,10,31)
-    df = keywordIdea(["dentist"], startdate=startdate, enddate=enddate, location_ids=["2124"], language_id="1000", customer_id='5051885307')
+    keyword_texts = ['dentist']
+    location_ids = ["2124"]
+    language_id = "1000"
+    customer_id = '5051885307'
+    page_url = None
+    google_ads_yaml = GOOGLE_ADS_YAML_PATH
+    df = keywordIdea(keyword_texts, startdate=startdate, enddate=enddate, location_ids=location_ids, language_id=language_id, customer_id=customer_id)
     print(df)
