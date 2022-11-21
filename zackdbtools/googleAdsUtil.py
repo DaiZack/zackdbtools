@@ -6,6 +6,7 @@ import os
 import time
 
 # sample yaml file https://github.com/googleads/google-ads-python/blob/main/google-ads.yaml
+#official code https://github.com/googleads/google-ads-python/blob/1c01c5efaa4bc6edfe5bfa441cce487f3a3f850f/examples/planning/generate_keyword_ideas.py#L35-L97
 GOOGLE_ADS_YAML_PATH = os.path.expandvars(os.environ.get("GOOGLE_ADS_YAML_PATH", "$HOME/.credentials/google-ads.yml"))
 
 def map_locations_ids_to_resource_names(client, location_ids):
@@ -121,8 +122,8 @@ if __name__ == "__main__":
     startdate = datetime(2022, 1, 1)
     enddate = datetime(2022,10,31)
     keyword_texts = ['dentist']
-    location_ids = ["2124"]
-    language_id = "1000"
+    location_ids = ["2124"]  # see https://developers.google.com/google-ads/api/docs/targeting/location-targeting
+    language_id = "1000" # french 1002
     customer_id = '5051885307'
     page_url = None
     google_ads_yaml = GOOGLE_ADS_YAML_PATH
