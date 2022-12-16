@@ -1,2 +1,4 @@
 *.pyc
 .env
+build
+zackdbtools.egg-info
