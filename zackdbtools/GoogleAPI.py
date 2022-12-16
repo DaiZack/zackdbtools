@@ -164,6 +164,13 @@ class GoogleAPIservice():
 
 
 if __name__ == "__main__":
+
+    api = GoogleAPIservice('webmasters', version='v3')
+    siteUrl = "https://www.parklandsmiles.ca/"
+    startDate = '2022-10-01'
+    endDate = '2022-10-31'
+    api.readSearchConcole(siteUrl, startDate, endDate)
+
     api = GoogleAPIservice('analyticsreporting', version='v3')
     view_id = "211915022"
     metrics = ['ga:goal1Completions']
