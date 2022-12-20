@@ -94,7 +94,7 @@ def keywordIdea(keyword_texts:list[str], startdate:datetime.date = None, enddate
         ideas = keyword_plan_idea_service.generate_keyword_ideas(
             request=request
         )
-    ideasdata = [{"keyword":i.text, "avg_monthly_searches":i.keyword_idea_metrics.avg_monthly_searches, "lot_bid_micros":i.keyword_idea_metrics.low_top_of_page_bid_micros,"high_bid_micros":i.keyword_idea_metrics.high_top_of_page_bid_micros} for i in ideas]
+    ideasdata = [{"keyword":i.text, "avg_monthly_searches":i.keyword_idea_metrics.avg_monthly_searches, "lot_bid_micros":i.keyword_idea_metrics.low_top_of_page_bid_micros,"high_bid_micros":i.keyword_idea_metrics.high_top_of_page_bid_micros,"competition":i.keyword_idea_metrics.competition} for i in ideas]
     df = pd.DataFrame(ideasdata)
     df['start_date'] = startdate.strftime("%Y-%m-%d")
     df['end_date'] = enddate.strftime('%Y-%m-%d')
