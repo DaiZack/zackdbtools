@@ -32,6 +32,9 @@ def token_from_service_account(scope, json_file_path=None):
 if __name__ == "__main__":
     scope = 'https://www.googleapis.com/auth/analytics.readonly'
     token = token_from_service_account("https://www.googleapis.com/auth/spreadsheets")
+    url = f'https://www.googleapis.com/analytics/v3/data/ga?ids=ga%3A253571268&dimensions=ga%3ApagePath%2Cga%3AyearMonth&metrics=ga%3Ausers%2Cga%3Asessions%2Cga%3Apageviews&segment=gaid%3A%3A-5&start-date=2022-07-01&end-date=2022-12-31&max-results=10000&token={token}'
+    twt = requests.get(url).json()
+
     request_url = 'https://www.googleapis.com/analytics/v3/data/ga?ids=ga%3A211915022&dimensions=ga%3AgoalPreviousStep1%2Cga%3AgoalPreviousStep2%2Cga%3AgoalPreviousStep3&metrics=ga%3Agoal1Completions&segment=gaid%3A%3A-5&start-date=2022-01-01&end-date=2022-10-17&max-results=2000'
     headers={'Authorization': 'Bearer ' + token}
     twt = requests.get(request_url, headers).json()

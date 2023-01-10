@@ -96,26 +96,25 @@ def df2sql( df : pd.DataFrame, tablename: str,engine: engine, replace=False, atu
     if 'id' in df.columns and atuoid:
         df = df.rename(columns={'id': '_id'})
     dtypes = getsqltype(df)
+    inspector = inspect(engine)
     if replace:
         with engine.connect() as conn:
             conn.execute(f'DROP TABLE IF EXISTS {tablename}')
-    inspector = inspect(engine)
-    if tablename in inspector.get_table_names():
+    elif tablename in inspector.get_table_names():
         df.to_sql(tablename, engine, if_exists='append', index=False, dtype=dtypes)
         return False
-    else:
-        metadata = MetaData()
-        columns = []
-        for col in dtypes:
-            columns.append(Column(col, dtypes[col]))
-        if atuoid:
-            table = Table(tablename, metadata, Column('id', BIGINT(unsigned=True), primary_key=True, autoincrement=True), *columns)
-        else:
-            table = Table(tablename, metadata, *columns)
-        metadata.create_all(engine)
-        df.to_sql(tablename, engine, if_exists='append', index=False, dtype=dtypes)
-        return True
 
+    metadata = MetaData()
+    columns = []
+    for col in dtypes:
+        columns.append(Column(col, dtypes[col]))
+    if atuoid:
+        table = Table(tablename, metadata, Column('id', BIGINT(unsigned=True), primary_key=True, autoincrement=True), *columns)
+    else:
+        table = Table(tablename, metadata, *columns)
+    metadata.create_all(engine)
+    df.to_sql(tablename, engine, if_exists='append', index=False, dtype=dtypes)
+    return True
 
 if __name__ == '__main__':
     engine = db_engine('dwhwrite','dcdashboard')

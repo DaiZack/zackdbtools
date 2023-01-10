@@ -77,27 +77,30 @@ class GoogleAPIservice():
             df = df.dropna(subset=[dedupCol]).reset_index()
         return df
 
-    def readAnalytics(self, view_id,  metrics, dimensions,segments=[],
+    def readAnalytics(self, view_id='',  metrics=['ga:users','ga:sessions','ga:pageviews'], dimensions=[],segments=[],
                       start_date='7daysAgo', end_date='today',
                       filters_expression=None, page_size=100000,
-                      pagetoken='0', columnHeader=None, df=pd.DataFrame()):
+                      pagetoken='0', columnHeader=None, df=pd.DataFrame(), body=None):
 
         self.rebuild("analyticsreporting")
         analytics = self.service.reports()
         if segments and 'ga:segment' not in dimensions:
             dimensions.append('ga:segment')
-        body = {
-            'reportRequests': [
-                {
-                    'viewId': view_id,
-                    'dateRanges': [{'startDate': start_date, 'endDate': end_date}],
-                    'metrics': [{'expression': mtr} for mtr in metrics],
-                    'dimensions': [{'name': dm} for dm in dimensions],
-                    'pageSize': page_size,
-                    'pageToken': pagetoken,
-                    'segments': [{"segmentId": seg} for seg in segments],
-                }]
-        }
+        if not body and view_id:
+            raise ValueError("Either body or view_id must be specified, view https://ga-dev-tools.web.app/request-composer/  for body format.")
+        if not body:
+            body = {
+                'reportRequests': [
+                    {
+                        'viewId': view_id,
+                        'dateRanges': [{'startDate': start_date, 'endDate': end_date}],
+                        'metrics': [{'expression': mtr} for mtr in metrics],
+                        'dimensions': [{'name': dm} for dm in dimensions],
+                        'pageSize': page_size,
+                        'pageToken': pagetoken,
+                        'segments': [{"segmentId": seg} for seg in segments],
+                    }]
+            }
         if filters_expression:
             body['reportRequests'][0]['dimensionFilterClauses'] = [{'filters': [
                 {'dimensionName': dimensions, 'operator': 'REGEXP', 'expressions': [filters_expression]}]}]
@@ -172,6 +175,12 @@ if __name__ == "__main__":
     api.readSearchConcole(siteUrl, startDate, endDate)
 
     api = GoogleAPIservice('analyticsreporting', version='v3')
+    body = {"reportRequests":[{"viewId":"253571268","dateRanges":[{"startDate":"7daysAgo","endDate":"yesterday"}],"metrics":[{"expression":"ga:users"},{"expression":"ga:sessions"},{"expression":"ga:pageviews"}],"dimensions":[{"histogramBuckets":[None],"name":"ga:pagePath"},{"histogramBuckets":[None],"name":"ga:yearMonth"},{"histogramBuckets":[None],"name":"ga:segment"}],"segments":[{"segmentId":"gaid::-5"}]}]}
+    dd = api.readAnalytics(body=body)
+
+
+
+
     view_id = "211915022"
     metrics = ['ga:goal1Completions']
     dimensions = ['ga:goalPreviousStep1', 'ga:date','ga:segment']
