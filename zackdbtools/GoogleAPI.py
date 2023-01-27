@@ -86,7 +86,7 @@ class GoogleAPIservice():
         analytics = self.service.reports()
         if segments and 'ga:segment' not in dimensions:
             dimensions.append('ga:segment')
-        if not body and view_id:
+        if not body and not view_id:
             raise ValueError("Either body or view_id must be specified, view https://ga-dev-tools.web.app/request-composer/  for body format.")
         if not body:
             body = {
@@ -102,8 +102,7 @@ class GoogleAPIservice():
                     }]
             }
         if filters_expression:
-            body['reportRequests'][0]['dimensionFilterClauses'] = [{'filters': [
-                {'dimensionName': dimensions, 'operator': 'REGEXP', 'expressions': [filters_expression]}]}]
+            body['reportRequests'][0]['filtersExpression'] = filters_expression
         response = analytics.batchGet(body=body).execute()
         pagetoken = response['reports'][0].get('nextPageToken', None)
         if not columnHeader:

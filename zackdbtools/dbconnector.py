@@ -52,17 +52,19 @@ def getsqltype(df : pd.DataFrame) -> dict:
             sqldtypes[dfcol] = BOOLEAN
             continue
         if str(coltype).startswith('int'):
-            if df[dfcol].max() < 65535 and df[dfcol].min() >= 0:
+            if df[dfcol].max() < 100 and df[dfcol].min() >= 0:
                 sqldtypes[dfcol] = SMALLINT(unsigned = True)
                 continue
-            elif df[dfcol].max() < 2147483647 and df[dfcol].min() >= -2147483648:
+            # elif df[dfcol].max() < 2147483647 and df[dfcol].min() >= -2147483648:
+            elif df[dfcol].max() < 147483647 and df[dfcol].min() >= -147483648:
                 sqldtypes[dfcol] = INTEGER
                 continue
             else:
                 sqldtypes[dfcol] = BIGINT
                 continue
         if str(coltype).startswith('float'):
-            if df[dfcol].max() <= 3.40282e+38 and df[dfcol].min() >= -3.40282e+38:
+            # if df[dfcol].max() <= 3.40282e+38 and df[dfcol].min() >= -3.40282e+38:
+            if df[dfcol].max() <= 3.40282e+30 and df[dfcol].min() >= -3.40282e+30:
                 sqldtypes[dfcol] = FLOAT
                 continue
             else:

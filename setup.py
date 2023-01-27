@@ -8,7 +8,7 @@ setuptools.setup(
 
     name="zackdbtools", # Replace with your username
 
-    version="0.1.23",
+    version="0.1.25",
 
     author="Zack Dai",
 
@@ -38,7 +38,6 @@ setuptools.setup(
       ],
     classifiers=[
         "Programming Language :: Python :: 3",
-        "License :: OSI Approved :: MIT License",
         "Operating System :: OS Independent",
     ]
 
