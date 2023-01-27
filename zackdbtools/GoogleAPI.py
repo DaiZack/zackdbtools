@@ -135,7 +135,7 @@ class GoogleAPIservice():
 
     def readSearchConcole(self, siteUrl, startDate='7daysAgo', endDate='today',
                           dimensions=["page", "query", "date"],  rowLimit=10000, startRow=0,
-                          dfall=pd.DataFrame()):
+                          dfall=pd.DataFrame(), country=None):
 
         self.rebuild("webmasters")
         service = self.service.searchanalytics()
@@ -146,6 +146,13 @@ class GoogleAPIservice():
             'rowLimit': rowLimit,
             'startRow': startRow
         }
+        if country:
+            body['dimensionFilterGroups'] =  [{
+                'filters': [{
+                    'dimension': 'country',
+                    'expression': country,
+                }]
+            }]
         response = service.query(siteUrl=siteUrl, body=body).execute()
         data = response.get('rows',[])
         if not data:
